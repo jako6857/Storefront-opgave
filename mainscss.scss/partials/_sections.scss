@@ -1,0 +1,57 @@
+@use "variables" as *;
+@use "navigation" as *;
+@use "mixins" as *;
+
+// SECTIONS
+section {
+  padding: $gutter * 2;
+  background: $main-color; // toned-down orange
+  margin: $gutter auto;
+  max-width: calc(800px - 2 * #{$section-offset});
+  border-radius: $radius;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+// SECTION 1
+#section1 article {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  p {
+    margin: 0;
+    flex: 0 0 60%;    // restrict text to left side
+    text-align: left;
+  }
+
+  button {
+    @include button-style($cta-color); // button stays on right
+    flex: 0 0 auto;
+  }
+}
+
+
+// SECTION 2
+#section2 article p {
+  margin: 0;
+}
+
+// SECTION 3
+#section3 .image-row {
+  display: flex;
+  justify-content: space-between;
+  gap: $gutter;
+
+  img {
+    width: 100%;
+    max-width: 32%;
+    border-radius: $radius;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}

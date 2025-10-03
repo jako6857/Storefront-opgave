@@ -1,0 +1,19 @@
+@use "partials/index" as *;
+
+// GLOBAL
+body {
+  font-family: $font-base;
+  color: $text-dark;
+  margin: 0;
+  padding: 0;
+  background: $accent-color;
+  line-height: 1.6;
+}
+
+h2 {
+  font-family: $font-header;
+  margin-bottom: $gutter / 2;
+  color: $text-dark;
+}
+
+
