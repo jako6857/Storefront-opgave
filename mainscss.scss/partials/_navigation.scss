@@ -1,29 +1,3 @@
 // NAVIGATION
 @use "variables" as *;
 @use "mixins" as *;
-nav {
-  background: $accent-color;
-  padding: $gutter / 1.5;
-
-  ul {
-    @include flex-center;
-    list-style: none;
-    gap: $gutter;
-    margin: 0;
-    padding: 0;
-
-    li a {
-      text-decoration: none;
-      color: $text-light;
-      padding: 0.5rem 1rem;
-      border-radius: $radius / 2;
-      font-weight: bold;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: $cta-color;
-        transform: translateY(-2px);
-      }
-    }
-  }
-}
