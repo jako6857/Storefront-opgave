@@ -8,6 +8,8 @@ const categoryMapping = {
             'VEHICLES': ['vehicle', 'motorcycle']
         };
 
+
+        //test commmit
         const categoryDisplayNames = {
             'beauty': 'Beauty',
             'fragrances': 'Fragrances',
