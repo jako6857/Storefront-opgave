@@ -489,3 +489,47 @@ const categoryMapping = {
         // Initialize
         renderMainCategories();
         initCart();
+
+
+          function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            const items = Object.values(cart);
+            
+            if (items.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+                cartTotal.textContent = '$0.00';
+                return;
+            }
+
+            let total = 0;
+            let html = '';
+
+            items.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+
+                // Escape strings for HTML safety
+                const safeTitle = String(item.title).replace(/'/g, "\\'");
+                
+                html += `
+                    <div class="cart-item">
+                        <img src="${item.thumbnail}" alt="${item.title}" class="cart-item-image" onerror="this.src='https://via.placeholder.com/80'">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.title}</div>
+                            <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                            <div class="cart-item-quantity">
+                                <button class="cart-qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="cart-qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                            </div>
+                            <button class="remove-item" onclick="removeFromCart(${item.id})">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            cartItems.innerHTML = html;
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+        }
