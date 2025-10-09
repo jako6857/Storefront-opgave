@@ -8,13 +8,18 @@
     <link rel="stylesheet" href="assets/css/main.css" />
   </head>
   <body>
-   <header>
+    <header>
         <div class="header-top">
             <div class="logo">STORE</div>
             <div class="header-actions">
-                <span class="header-link">Search</span>
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search products..." id="searchInput">
+                </div>
                 <span class="header-link">Account</span>
-                <span class="header-link">Cart (0)</span>
+                <span class="header-link" id="cartBtn">
+                    Cart
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </span>
             </div>
         </div>
         <nav>
@@ -37,6 +42,29 @@
                 <h2>Welcome to Our Store</h2>
                 <p>Select a category to start shopping</p>
             </div>
+        </div>
+    </div>
+
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h2 class="cart-title">Shopping Cart</h2>
+            <button class="cart-close" onclick="closeCart()">×</button>
+        </div>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Checkout</button>
         </div>
     </div>
 

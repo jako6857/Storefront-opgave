@@ -36,6 +36,313 @@ const categoryMapping = {
 
         let currentMainCategory = null;
         let currentSubCategory = null;
+        let allProducts = [];
+        let cart = {};
+
+        // Load cart from memory on init
+        function initCart() {
+            updateCartUI();
+        }
+
+        function saveCart() {
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const totalItems = Object.values(cart).reduce((sum, item) => sum + item.quantity, 0);
+            badge.textContent = totalItems;
+            badge.style.display = totalItems > 0 ? 'block' : 'none';
+            renderCart();
+        }
+
+        function addToCart(product, quantity = 1) {
+            if (cart[product.id]) {
+                cart[product.id].quantity += quantity;
+            } else {
+                cart[product.id] = {
+                    ...product,
+                    quantity: quantity
+                };
+            }
+            saveCart();
+            showNotification('Added to cart!');
+        }
+
+        function removeFromCart(productId) {
+            delete cart[productId];
+            saveCart();
+        }
+
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity <= 0) {
+                removeFromCart(productId);
+            } else {
+                cart[productId].quantity = newQuantity;
+                saveCart();
+            }
+        }
+
+        function renderCart() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            const items = Object.values(cart);
+            
+            if (items.length === 0) {
+                cartItems.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+                cartTotal.textContent = '$0.00';
+                return;
+            }
+
+            let total = 0;
+            let html = '';
+
+            items.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+
+                html += `
+                    <div class="cart-item">
+                        <img src="${item.thumbnail}" alt="${item.title}" class="cart-item-image">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.title}</div>
+                            <div class="cart-item-price">$${item.price}</div>
+                            <div class="cart-item-quantity">
+                                <button class="cart-qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                                <span>${item.quantity}</span>
+                                <button class="cart-qty-btn" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                            </div>
+                            <button class="remove-item" onclick="removeFromCart(${item.id})">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            cartItems.innerHTML = html;
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+        }
+
+        function openCart() {
+            document.getElementById('cartSidebar').classList.add('active');
+        }
+
+        function closeCart() {
+            document.getElementById('cartSidebar').classList.remove('active');
+        }
+
+        function checkout() {
+            if (Object.keys(cart).length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            alert('Checkout functionality would be implemented here!');
+        }
+
+        document.getElementById('cartBtn').addEventListener('click', openCart);
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: #000;
+                color: white;
+                padding: 16px 24px;
+                border-radius: 4px;
+                z-index: 4000;
+                animation: slideIn 0.3s;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        // Search functionality
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchProducts(e.target.value);
+            }, 300);
+        });
+
+        async function searchProducts(query) {
+            if (!query.trim()) {
+                return;
+            }
+
+            const productsArea = document.getElementById('productsArea');
+            productsArea.innerHTML = '<div class="loading">Searching...</div>';
+
+            try {
+                const response = await fetch(`https://dummyjson.com/products/search?q=${query}`);
+                const data = await response.json();
+
+                if (data.products && data.products.length > 0) {
+                    renderSearchResults(data.products, query);
+                } else {
+                    productsArea.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔍</div>
+                            <h2>No results found</h2>
+                            <p>Try searching with different keywords</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                productsArea.innerHTML = `
+                    <div class="empty-state">
+                        <h2>Error searching</h2>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function renderSearchResults(products, query) {
+            const productsArea = document.getElementById('productsArea');
+            
+            let html = `
+                <div class="page-header">
+                    <h1 class="page-title">Search Results for "${query}"</h1>
+                    <div class="products-count">${products.length} products found</div>
+                </div>
+                <div class="products-grid">
+            `;
+
+            products.forEach(product => {
+                html += createProductCard(product);
+            });
+
+            html += '</div>';
+            productsArea.innerHTML = html;
+        }
+
+        function createProductCard(product) {
+            const rating = product.rating.toFixed(1);
+            const stars = '★'.repeat(Math.round(product.rating)) + '☆'.repeat(5 - Math.round(product.rating));
+            
+            return `
+                <div class="product-card">
+                    <div class="product-image-wrapper" onclick="openModal(${product.id})">
+                        <img src="${product.thumbnail}" alt="${product.title}" class="product-image">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title" onclick="openModal(${product.id})">${product.title}</div>
+                        <div class="product-price">$${product.price}</div>
+                        <div class="product-rating">
+                            <span class="stars">${stars}</span>
+                            <span>${rating}</span>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCartFromCard(${product.id})">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addToCartFromCard(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (product) {
+                addToCart(product);
+            }
+        }
+
+        async function openModal(productId) {
+            const modal = document.getElementById('productModal');
+            const modalBody = document.getElementById('modalBody');
+            
+            modal.classList.add('active');
+            modalBody.innerHTML = '<div class="loading">Loading product...</div>';
+
+            try {
+                const response = await fetch(`https://dummyjson.com/products/${productId}`);
+                const product = await response.json();
+
+                const stars = '★'.repeat(Math.round(product.rating)) + '☆'.repeat(5 - Math.round(product.rating));
+                
+                modalBody.innerHTML = `
+                    <img src="${product.thumbnail}" alt="${product.title}" class="modal-image">
+                    <div class="modal-details">
+                        <h2 class="modal-title">${product.title}</h2>
+                        <div class="modal-price">${product.price}</div>
+                        <div class="product-rating" style="margin-bottom: 20px;">
+                            <span class="stars">${stars}</span>
+                            <span>${product.rating.toFixed(1)}</span>
+                        </div>
+                        <p class="modal-description">${product.description}</p>
+                        <div class="modal-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Brand</span>
+                                <span class="meta-value">${product.brand || 'N/A'}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Category</span>
+                                <span class="meta-value">${product.category}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Stock</span>
+                                <span class="meta-value">${product.stock} units</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Discount</span>
+                                <span class="meta-value">${product.discountPercentage}%</span>
+                            </div>
+                        </div>
+                        <div class="quantity-selector">
+                            <span style="font-weight: 600;">Quantity:</span>
+                            <button class="quantity-btn" onclick="changeModalQuantity(-1)">-</button>
+                            <span class="quantity-value" id="modalQuantity">1</span>
+                            <button class="quantity-btn" onclick="changeModalQuantity(1)">+</button>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCartFromModal(${product.id})">
+                            Add to Cart
+                        </button>
+                    </div>
+                `;
+            } catch (error) {
+                modalBody.innerHTML = `
+                    <div class="empty-state">
+                        <h2>Error loading product</h2>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.remove('active');
+            document.getElementById('modalQuantity').textContent = '1';
+        }
+
+        function changeModalQuantity(change) {
+            const quantityEl = document.getElementById('modalQuantity');
+            let quantity = parseInt(quantityEl.textContent);
+            quantity = Math.max(1, quantity + change);
+            quantityEl.textContent = quantity;
+        }
+
+        async function addToCartFromModal(productId) {
+            const quantity = parseInt(document.getElementById('modalQuantity').textContent);
+            const response = await fetch(`https://dummyjson.com/products/${productId}`);
+            const product = await response.json();
+            addToCart(product, quantity);
+            closeModal();
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('productModal').addEventListener('click', (e) => {
+            if (e.target.id === 'productModal') {
+                closeModal();
+            }
+        });
 
         function renderMainCategories() {
             const container = document.getElementById('mainCategories');
@@ -112,6 +419,7 @@ const categoryMapping = {
                 const data = await response.json();
 
                 if (data.products && data.products.length > 0) {
+                    allProducts = data.products;
                     renderProducts(data.products, category);
                 } else {
                     productsArea.innerHTML = `
@@ -145,28 +453,39 @@ const categoryMapping = {
             `;
 
             products.forEach(product => {
-                const rating = product.rating.toFixed(1);
-                const stars = '★'.repeat(Math.round(product.rating)) + '☆'.repeat(5 - Math.round(product.rating));
-                
-                html += `
-                    <div class="product-card">
-                        <div class="product-image-wrapper">
-                            <img src="${product.thumbnail}" alt="${product.title}" class="product-image">
-                        </div>
-                        <div class="product-info">
-                            <div class="product-title">${product.title}</div>
-                            <div class="product-price">$${product.price}</div>
-                            <div class="product-rating">
-                                <span class="stars">${stars}</span>
-                                <span>${rating}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                html += createProductCard(product);
             });
 
             html += '</div>';
             productsArea.innerHTML = html;
         }
 
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
         renderMainCategories();
+        initCart();
