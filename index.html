@@ -8,9 +8,12 @@
     <link rel="stylesheet" href="assets/css/main.css" />
   </head>
   <body>
-    <header>
+     <header>
         <div class="header-top">
-            <div class="logo">Lukas & Jakobs Second Hand Shop</div>
+            <div class="logo">
+                <div class="logo-icon">🛒</div>
+                <span>Lukas & Jakobs Second Hand Shop</span>
+            </div>
             <div class="header-actions">
                 <div class="search-container">
                     <input type="text" class="search-input" placeholder="Search products..." id="searchInput">
@@ -18,7 +21,7 @@
                 <span class="header-link">Account</span>
                 <span class="header-link" id="cartBtn">
                     Cart
-                    <span class="cart-badge" id="cartBadge">0</span>
+                    <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
                 </span>
             </div>
         </div>
@@ -52,7 +55,6 @@
         </div>
     </div>
 
-
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
             <h2 class="cart-title">Shopping Cart</h2>
@@ -76,6 +78,7 @@
                     <li><a href="#">New Arrivals</a></li>
                     <li><a href="#">Best Sellers</a></li>
                     <li><a href="#">Sale</a></li>
+                    <li><a href="#">All Categories</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -83,7 +86,8 @@
                 <ul>
                     <li><a href="#">Customer Service</a></li>
                     <li><a href="#">Track Order</a></li>
-                    <li><a href="#">Returns</a></li>
+                    <li><a href="#">Returns & Exchanges</a></li>
+                    <li><a href="#">Shipping Information</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -91,9 +95,28 @@
                 <ul>
                     <li><a href="#">Our Story</a></li>
                     <li><a href="#">Careers</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Sustainability</a></li>
                 </ul>
             </div>
+            <div class="footer-section">
+                <h3>Trade Conditions</h3>
+                <p>All sales are final for second-hand items.</p>
+                <p>14-day return policy on select items.</p>
+                <p>Items must be in original condition.</p>
+                <p>Shipping costs are non-refundable.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Bank Information</h3>
+                <p><strong>Bank:</strong> Nordic Commerce Bank</p>
+                <p><strong>Account Name:</strong> L&J Second Hand ApS</p>
+                <p><strong>IBAN:</strong> DK89 3701 0012 3456 78</p>
+                <p><strong>SWIFT/BIC:</strong> NDEADKKK</p>
+                <p><strong>CVR:</strong> 12345678</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Lukas & Jakobs Second Hand Shop. All rights reserved.</p>
         </div>
     </footer>
   </body>

@@ -1,4 +1,4 @@
-        * {
+      * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -10,7 +10,6 @@
             color: #000000;
         }
 
-        /* Header */
         header {
             background: #000000;
             color: white;
@@ -31,9 +30,23 @@
         }
 
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 24px;
             font-weight: 700;
             letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
         }
 
         .header-actions {
@@ -90,7 +103,6 @@
             font-weight: 600;
         }
 
-        /* Navigation */
         nav {
             background: #000000;
             border-top: 1px solid #333;
@@ -146,7 +158,6 @@
             background: white;
         }
 
-        /* Subcategories */
         .subcategories-bar {
             background: #f8f8f8;
             border-bottom: 1px solid #e0e0e0;
@@ -191,11 +202,11 @@
             border-color: #000;
         }
 
-        /* Main Content */
         .container {
             max-width: 1600px;
             margin: 0 auto;
             padding: 40px 60px;
+            min-height: 60vh;
         }
 
         .page-header {
@@ -214,7 +225,6 @@
             font-size: 14px;
         }
 
-        /* Products Grid */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -307,7 +317,6 @@
             background: #333;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -351,6 +360,7 @@
             align-items: center;
             justify-content: center;
             transition: background 0.2s;
+            z-index: 1;
         }
 
         .modal-close:hover {
@@ -450,7 +460,6 @@
             text-align: center;
         }
 
-        /* Cart Sidebar */
         .cart-sidebar {
             position: fixed;
             top: 0;
@@ -531,6 +540,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            margin-bottom: 8px;
         }
 
         .cart-qty-btn {
@@ -553,7 +563,6 @@
             color: #ff4444;
             cursor: pointer;
             font-size: 12px;
-            margin-top: 8px;
         }
 
         .cart-footer {
@@ -593,7 +602,6 @@
             color: #999;
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 100px 20px;
@@ -624,11 +632,10 @@
             color: #666;
         }
 
-        /* Footer */
         footer {
             background: #f8f8f8;
             border-top: 1px solid #e0e0e0;
-            padding: 40px 60px;
+            padding: 40px 60px 20px;
             margin-top: 80px;
         }
 
@@ -636,8 +643,9 @@
             max-width: 1600px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 40px;
+            margin-bottom: 30px;
         }
 
         .footer-section h3 {
@@ -667,6 +675,45 @@
             color: #000;
         }
 
+        .footer-section p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .footer-bottom {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
         @media (max-width: 768px) {
             .header-top,
             .nav-container,
@@ -675,6 +722,16 @@
             footer {
                 padding-left: 20px;
                 padding-right: 20px;
+            }
+
+            .logo {
+                font-size: 16px;
+            }
+
+            .logo-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
             }
 
             .search-input {
@@ -702,5 +759,10 @@
             .cart-sidebar {
                 width: 100%;
                 right: -100%;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
             }
         }
